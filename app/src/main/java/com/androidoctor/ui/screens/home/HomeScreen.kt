@@ -22,6 +22,9 @@ fun HomeScreen(
     onFix: () -> Unit,
     onBenchmark: () -> Unit,
     onBattery: () -> Unit,
+    onTrends: () -> Unit,
+    onBloatware: () -> Unit,
+    onHeavyApps: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -100,11 +103,44 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            ActionCard(
+                title = "Trends",
+                subtitle = "Score history over time",
+                icon = Icons.Outlined.TrendingUp,
+                accent = Copper,
+                onClick = onTrends,
+                modifier = Modifier.weight(0.5f),
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            ActionCard(
+                title = "Bloatware",
+                subtitle = "OEM catalog",
+                icon = Icons.Outlined.Delete,
+                accent = ScoreOrange,
+                onClick = onBloatware,
+                modifier = Modifier.weight(0.5f),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ActionCard(
+            title = "Heavy Apps",
+            subtitle = "Which apps used the most time · no Shizuku needed",
+            icon = Icons.Outlined.Timer,
+            accent = ScoreYellow,
+            onClick = onHeavyApps,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
         Spacer(modifier = Modifier.weight(1f))
 
         // Footer
         Text(
-            text = "v1.0.0 · No root · No ads · No cloud",
+            text = "v${com.androidoctor.BuildConfig.VERSION_NAME} · No root · No ads · No cloud",
             fontSize = 11.sp,
             color = Zinc700,
             modifier = Modifier.align(Alignment.CenterHorizontally),

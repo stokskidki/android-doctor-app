@@ -1,0 +1,56 @@
+[
+  {
+    "pkg": "com.miui.msa.global",
+    "name": "MIUI System Ads",
+    "severity": "heavy",
+    "safe": true,
+    "ramMb": 30,
+    "batteryPct": 1.5,
+    "notes": "Serves ads in system apps. Disabling removes most MIUI ads."
+  },
+  {
+    "pkg": "com.miui.analytics",
+    "name": "MIUI Analytics",
+    "severity": "heavy",
+    "safe": true,
+    "ramMb": 25,
+    "batteryPct": 1.0,
+    "notes": "Telemetry sent to Xiaomi servers."
+  },
+  {
+    "pkg": "com.miui.voiceassist",
+    "name": "Mi Voice Assistant",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 60,
+    "batteryPct": 1.4,
+    "notes": "Xiaomi's voice assistant."
+  },
+  {
+    "pkg": "com.xiaomi.market",
+    "name": "Mi Store (GetApps)",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 80,
+    "batteryPct": 1.6,
+    "notes": "Xiaomi app store."
+  },
+  {
+    "pkg": "com.mi.globalbrowser",
+    "name": "Mi Browser",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 55,
+    "batteryPct": 0.8,
+    "notes": "Use Chrome or Firefox instead."
+  },
+  {
+    "pkg": "com.xiaomi.mipicks",
+    "name": "Mi Picks",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 35,
+    "batteryPct": 1.0,
+    "notes": "App recommendation engine. Often ad-heavy."
+  }
+]

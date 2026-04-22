@@ -1,0 +1,29 @@
+[
+  {
+    "pkg": "com.heytap.cloud",
+    "name": "Heytap Cloud",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 55,
+    "batteryPct": 1.2,
+    "notes": "OPPO cloud sync."
+  },
+  {
+    "pkg": "com.coloros.gamespaceui",
+    "name": "Game Space",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 35,
+    "batteryPct": 0.5,
+    "notes": "ColorOS gaming hub."
+  },
+  {
+    "pkg": "com.oppo.usercenter",
+    "name": "OPPO User Center",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 30,
+    "batteryPct": 0.6,
+    "notes": "Account management."
+  }
+]

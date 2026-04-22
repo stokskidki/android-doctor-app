@@ -3,6 +3,7 @@ package com.androidoctor.data.repository
 import android.content.Context
 import com.androidoctor.data.shell.ShellExecutor
 import com.androidoctor.domain.repository.FixRepository
+import com.androidoctor.domain.repository.PanicBoostResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -107,6 +108,74 @@ class FixRepositoryImpl @Inject constructor(
         return (after - before).coerceAtLeast(0) * 1024 // KB to bytes
     }
 
+    override suspend fun fstrimData(): Boolean {
+        // fstrim recovers write speed on worn eMMC/UFS. Reqs root or signature perm;
+        // Shizuku-shell works on most devices.
+        val result = shell.exec("fstrim -v /data", timeoutMs = 60_000)
+        return result.isSuccess
+    }
+
+    override suspend fun killAllApps(): Int {
+        // am kill-all force-stops all cached background processes (empty + cached).
+        // Safer than `killall` — Android restarts anything essential.
+        val before = shell.exec("dumpsys procstats --current 2>/dev/null | wc -l").output.trim().toIntOrNull() ?: 0
+        shell.exec("am kill-all")
+        val after = shell.exec("dumpsys procstats --current 2>/dev/null | wc -l").output.trim().toIntOrNull() ?: before
+        return (before - after).coerceAtLeast(0)
+    }
+
+    override suspend fun dropKernelCaches(): Boolean {
+        // Usually blocked without root, but worth trying via Shizuku.
+        val result = shell.exec("sync && echo 3 > /proc/sys/vm/drop_caches")
+        return result.isSuccess
+    }
+
+    override suspend fun reoptimizeTopApps(packages: List<String>): Int {
+        var count = 0
+        for (pkg in packages.take(10)) {
+            val r = shell.exec("cmd package compile -m speed -f $pkg", timeoutMs = 60_000)
+            if (r.isSuccess) count++
+        }
+        return count
+    }
+
+    override suspend fun setCpuGovernor(governor: String): Int {
+        // Write `governor` to each online CPU's scaling_governor.
+        // Valid: performance, powersave, ondemand, schedutil, interactive.
+        var count = 0
+        val cpus = shell.exec("ls /sys/devices/system/cpu/").output
+            .split("\\s+".toRegex())
+            .filter { it.matches(Regex("cpu\\d+")) }
+        for (cpu in cpus) {
+            val path = "/sys/devices/system/cpu/$cpu/cpufreq/scaling_governor"
+            val original = shell.exec("cat $path").output.trim()
+            val r = shell.exec("echo $governor > $path")
+            if (r.isSuccess) {
+                recordChange("cpu_governor", cpu, original, governor)
+                count++
+            }
+        }
+        return count
+    }
+
+    override suspend fun getCurrentCpuGovernor(): String? {
+        val r = shell.exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor")
+        return if (r.isSuccess) r.output.trim().ifBlank { null } else null
+    }
+
+    override suspend fun panicBoost(): PanicBoostResult {
+        val killed = killAllApps()
+        val freed = trimCaches()
+        val dropped = dropKernelCaches()
+        val animOk = setAnimationScale(0.0f)
+        return PanicBoostResult(
+            processesKilled = killed,
+            cacheFreedBytes = freed,
+            kernelCachesDropped = dropped,
+            animationsZeroed = animOk,
+        )
+    }
+
     override suspend fun rollbackAll(): Int {
         if (!snapshotFile.exists()) return 0
 
@@ -131,6 +200,10 @@ class FixRepositoryImpl @Inject constructor(
                 }
                 "restrict_background" -> {
                     shell.exec("cmd appops set $target RUN_IN_BACKGROUND allow").isSuccess
+                }
+                "cpu_governor" -> {
+                    val path = "/sys/devices/system/cpu/$target/cpufreq/scaling_governor"
+                    shell.exec("echo $original > $path").isSuccess
                 }
                 else -> false
             }

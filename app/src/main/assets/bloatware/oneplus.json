@@ -1,0 +1,47 @@
+[
+  {
+    "pkg": "net.oneplus.widget",
+    "name": "OnePlus Widgets",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 25,
+    "batteryPct": 0.3,
+    "notes": "Default OnePlus widgets."
+  },
+  {
+    "pkg": "com.oneplus.opbackup",
+    "name": "OnePlus Backup",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 30,
+    "batteryPct": 0.4,
+    "notes": "Local backup tool."
+  },
+  {
+    "pkg": "com.oneplus.brickmode",
+    "name": "Zen Mode",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 20,
+    "batteryPct": 0.2,
+    "notes": "Focus mode app."
+  },
+  {
+    "pkg": "com.oneplus.gamespace",
+    "name": "Game Space",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 35,
+    "batteryPct": 0.5,
+    "notes": "Gaming hub."
+  },
+  {
+    "pkg": "com.heytap.cloud",
+    "name": "Heytap Cloud",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 55,
+    "batteryPct": 1.2,
+    "notes": "OPPO/OnePlus cloud sync."
+  }
+]

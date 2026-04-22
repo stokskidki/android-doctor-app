@@ -2,11 +2,15 @@ package com.androidoctor.ui.screens.fix
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androidoctor.data.shell.ShellExecutor
 import com.androidoctor.domain.model.BloatwareEntry
 import com.androidoctor.domain.repository.DiagnosisRepository
+import com.androidoctor.domain.repository.PanicBoostResult
+import com.androidoctor.domain.usecase.CpuBoostUseCase
 import com.androidoctor.domain.usecase.FixLevel
 import com.androidoctor.domain.usecase.FixResult
 import com.androidoctor.domain.usecase.FixUseCase
+import com.androidoctor.domain.usecase.PanicBoostUseCase
 import com.androidoctor.domain.usecase.RollbackUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,20 +27,30 @@ data class FixUiState(
     val rollbackResult: Int? = null,
     val hasSnapshot: Boolean = false,
     val error: String? = null,
+    val shizukuAvailable: Boolean = false,
+    val panicResult: PanicBoostResult? = null,
+    val cpuGovernor: String? = null,
+    val cpuBoostActive: Boolean = false,
 )
 
 @HiltViewModel
 class FixViewModel @Inject constructor(
     private val fixUseCase: FixUseCase,
     private val rollbackUseCase: RollbackUseCase,
+    private val panicBoost: PanicBoostUseCase,
+    private val cpuBoost: CpuBoostUseCase,
     private val diagnosisRepository: DiagnosisRepository,
+    private val shell: ShellExecutor,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(FixUiState())
     val state: StateFlow<FixUiState> = _state.asStateFlow()
 
     init {
-        _state.value = _state.value.copy(hasSnapshot = rollbackUseCase.hasSnapshot())
+        _state.value = _state.value.copy(
+            hasSnapshot = rollbackUseCase.hasSnapshot(),
+            shizukuAvailable = shell.isShizukuAvailable,
+        )
         loadBloatware()
     }
 
@@ -76,10 +90,57 @@ class FixViewModel @Inject constructor(
                     isLoading = false,
                     rollbackResult = count,
                     hasSnapshot = false,
+                    cpuBoostActive = false,
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(isLoading = false, error = e.message)
             }
         }
+    }
+
+    fun runPanicBoost() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, step = "Panic boost running...")
+            try {
+                val result = panicBoost()
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    panicResult = result,
+                    hasSnapshot = rollbackUseCase.hasSnapshot(),
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(isLoading = false, error = e.message)
+            }
+        }
+    }
+
+    fun toggleCpuBoost() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, step = "Changing CPU governor...")
+            try {
+                if (_state.value.cpuBoostActive) {
+                    cpuBoost.disable()
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        cpuBoostActive = false,
+                        cpuGovernor = cpuBoost.current(),
+                    )
+                } else {
+                    cpuBoost.enable()
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        cpuBoostActive = true,
+                        cpuGovernor = "performance",
+                        hasSnapshot = rollbackUseCase.hasSnapshot(),
+                    )
+                }
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(isLoading = false, error = e.message)
+            }
+        }
+    }
+
+    fun consumePanicResult() {
+        _state.value = _state.value.copy(panicResult = null)
     }
 }

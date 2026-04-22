@@ -1,0 +1,29 @@
+[
+  {
+    "pkg": "com.realme.link",
+    "name": "Realme Link",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 40,
+    "batteryPct": 0.7,
+    "notes": "Realme device companion."
+  },
+  {
+    "pkg": "com.heytap.cloud",
+    "name": "Heytap Cloud",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 55,
+    "batteryPct": 1.2,
+    "notes": "Realme/OPPO cloud sync."
+  },
+  {
+    "pkg": "com.coloros.gamespaceui",
+    "name": "Game Space",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 35,
+    "batteryPct": 0.5,
+    "notes": "Gaming hub."
+  }
+]

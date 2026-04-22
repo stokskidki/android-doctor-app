@@ -12,6 +12,8 @@ data class FixResult(
     val settingsChanged: Int,
     val batteryOptimized: Int,
     val cacheFreedBytes: Long,
+    val storageTrimmed: Boolean = false,
+    val appsReoptimized: Int = 0,
 )
 
 class FixUseCase @Inject constructor(
@@ -20,6 +22,7 @@ class FixUseCase @Inject constructor(
     suspend operator fun invoke(
         bloatware: List<BloatwareEntry>,
         level: FixLevel = FixLevel.SAFE,
+        topLaunchedApps: List<String> = emptyList(),
     ): FixResult {
         var packagesDisabled = 0
         var settingsChanged = 0
@@ -53,11 +56,27 @@ class FixUseCase @Inject constructor(
         // Phase 4: Cache
         val cacheFreed = repository.trimCaches()
 
+        // Phase 5: Storage TRIM (Moderate + Aggressive)
+        // Recovers write speed on worn eMMC/UFS. Real 20-40% gain on 3+ yr devices.
+        val storageTrimmed = when (level) {
+            FixLevel.SAFE -> false
+            else -> repository.fstrimData()
+        }
+
+        // Phase 6: ART re-optimization (Aggressive only)
+        // `cmd package compile -m speed -f <pkg>` re-compiles apps at speed profile.
+        // Cuts cold launch time for frequently-used apps.
+        val appsReoptimized = if (level == FixLevel.AGGRESSIVE && topLaunchedApps.isNotEmpty()) {
+            repository.reoptimizeTopApps(topLaunchedApps)
+        } else 0
+
         return FixResult(
             packagesDisabled = packagesDisabled,
             settingsChanged = settingsChanged,
             batteryOptimized = batteryOptimized,
             cacheFreedBytes = cacheFreed,
+            storageTrimmed = storageTrimmed,
+            appsReoptimized = appsReoptimized,
         )
     }
 }
@@ -67,4 +86,18 @@ class RollbackUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Int = repository.rollbackAll()
     fun hasSnapshot(): Boolean = repository.hasRollbackSnapshot()
+}
+
+class PanicBoostUseCase @Inject constructor(
+    private val repository: FixRepository,
+) {
+    suspend operator fun invoke() = repository.panicBoost()
+}
+
+class CpuBoostUseCase @Inject constructor(
+    private val repository: FixRepository,
+) {
+    suspend fun enable() = repository.setCpuGovernor("performance")
+    suspend fun disable() = repository.setCpuGovernor("schedutil")
+    suspend fun current(): String? = repository.getCurrentCpuGovernor()
 }

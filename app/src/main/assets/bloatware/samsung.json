@@ -1,0 +1,92 @@
+[
+  {
+    "pkg": "com.samsung.android.bixby.agent",
+    "name": "Bixby Voice",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 80,
+    "batteryPct": 2.3,
+    "notes": "Samsung voice assistant. Disabling hides the Bixby button action."
+  },
+  {
+    "pkg": "com.samsung.android.app.spage",
+    "name": "Bixby Home",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 55,
+    "batteryPct": 1.4,
+    "notes": "Bixby leftmost home screen panel."
+  },
+  {
+    "pkg": "com.samsung.android.bixbyvision.framework",
+    "name": "Bixby Vision",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 30,
+    "batteryPct": 0.6,
+    "notes": "Visual search features."
+  },
+  {
+    "pkg": "com.samsung.android.spay",
+    "name": "Samsung Pay",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 75,
+    "batteryPct": 1.2,
+    "notes": "Samsung mobile payments. Disable if you use Google Pay."
+  },
+  {
+    "pkg": "com.samsung.android.app.contacts",
+    "name": "Samsung Contacts framework",
+    "severity": "heavy",
+    "safe": false,
+    "ramMb": 40,
+    "batteryPct": 0.4,
+    "notes": "Required for contacts app. Do NOT disable."
+  },
+  {
+    "pkg": "com.samsung.android.game.gamehome",
+    "name": "Game Launcher",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 35,
+    "batteryPct": 0.5,
+    "notes": "Samsung's game hub."
+  },
+  {
+    "pkg": "com.samsung.android.themestore",
+    "name": "Galaxy Themes",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 25,
+    "batteryPct": 0.2,
+    "notes": "Theme marketplace."
+  },
+  {
+    "pkg": "com.sec.android.app.samsungapps",
+    "name": "Galaxy Store",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 90,
+    "batteryPct": 1.8,
+    "notes": "Samsung's app store. Play Store covers most apps."
+  },
+  {
+    "pkg": "com.samsung.android.oneconnect",
+    "name": "SmartThings",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 70,
+    "batteryPct": 2.0,
+    "notes": "Samsung smart home hub. Disable if not used."
+  },
+  {
+    "pkg": "com.samsung.android.voc",
+    "name": "Samsung Members",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 40,
+    "batteryPct": 0.5,
+    "notes": "Support and feedback app."
+  }
+]

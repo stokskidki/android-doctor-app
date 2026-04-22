@@ -1,7 +1,11 @@
 package com.androidoctor.ui.screens.diagnose
 
+import android.content.Intent
+import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -9,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -151,6 +156,46 @@ fun DiagnoseScreen(
                         topIssues = result.verdict.topIssues,
                         recommendation = result.verdict.recommendation,
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val ctx = LocalContext.current
+                    LaunchedEffect(state.shareUri) {
+                        state.shareUri?.let { uri ->
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "image/png"
+                                putExtra(Intent.EXTRA_STREAM, uri)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            }
+                            runCatching {
+                                ctx.startActivity(Intent.createChooser(intent, "Share report").apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                })
+                            }.onFailure {
+                                Toast.makeText(ctx, "No app can share images", Toast.LENGTH_SHORT).show()
+                            }
+                            viewModel.consumeShareUri()
+                        }
+                    }
+                    LaunchedEffect(state.shareError) {
+                        state.shareError?.let { err ->
+                            Toast.makeText(ctx, "Share failed: $err", Toast.LENGTH_LONG).show()
+                            viewModel.consumeShareError()
+                        }
+                    }
+
+                    OutlinedButton(
+                        onClick = { viewModel.share() },
+                        enabled = !state.sharing,
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Copper, RoundedCornerShape(4.dp)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Copper),
+                        border = null,
+                    ) {
+                        Text(if (state.sharing) "Rendering..." else "Share report card", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                    }
 
                     Spacer(modifier = Modifier.height(32.dp))
                 }

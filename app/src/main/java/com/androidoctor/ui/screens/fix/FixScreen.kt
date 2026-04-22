@@ -24,6 +24,7 @@ import com.androidoctor.ui.theme.*
 @Composable
 fun FixScreen(
     onBack: () -> Unit,
+    onShizukuSetup: () -> Unit = {},
     viewModel: FixViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -133,9 +134,92 @@ fun FixScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            if (!state.shizukuAvailable) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, ScoreYellow, RoundedCornerShape(4.dp))
+                        .padding(14.dp),
+                ) {
+                    Text("Shizuku not running", color = ScoreYellow, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Fix actions need privileged shell access. One-time ADB setup, no root needed.",
+                        color = Zinc400, fontSize = 12.sp,
+                    )
+                    com.androidoctor.ui.components.ShizukuSetupLink(onOpen = onShizukuSetup)
+                }
+                Spacer(Modifier.height(16.dp))
+            }
+
+            // PANIC BOOST — the crazy-but-meaningful button
+            Button(
+                onClick = { viewModel.runPanicBoost() },
+                enabled = state.shizukuAvailable,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = ScoreRed,
+                    contentColor = Zinc100,
+                ),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("⚡ PANIC BOOST", fontWeight = FontWeight.Bold, fontSize = 15.sp, letterSpacing = 1.sp)
+                    Text(
+                        "Kill all + trim + drop caches + zero animations",
+                        fontSize = 10.sp,
+                        color = Zinc100.copy(alpha = 0.8f),
+                    )
+                }
+            }
+
+            state.panicResult?.let { p ->
+                Spacer(Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, ScoreRed, RoundedCornerShape(4.dp))
+                        .padding(12.dp),
+                ) {
+                    Text("Boost applied", color = ScoreRed, fontSize = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                    Spacer(Modifier.height(6.dp))
+                    Text("${p.processesKilled} processes killed", color = Zinc100, fontSize = 13.sp)
+                    if (p.cacheFreedBytes > 0) {
+                        Text("${p.cacheFreedBytes / (1024 * 1024)} MB cache freed", color = Zinc100, fontSize = 13.sp)
+                    }
+                    if (p.kernelCachesDropped) Text("Kernel caches dropped", color = Zinc100, fontSize = 13.sp)
+                    if (p.animationsZeroed) Text("Animations off (5 min)", color = Zinc100, fontSize = 13.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // CPU BOOST toggle
+            OutlinedButton(
+                onClick = { viewModel.toggleCpuBoost() },
+                enabled = state.shizukuAvailable,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = if (state.cpuBoostActive) ScoreGreen else Copper,
+                ),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, if (state.cpuBoostActive) ScoreGreen else Copper, RoundedCornerShape(4.dp)),
+                border = null,
+            ) {
+                Text(
+                    if (state.cpuBoostActive) "CPU BOOST ON · tap to disable" else "CPU Performance Boost",
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 13.sp,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Action buttons — solid/outline, no gradient
             Button(
                 onClick = { viewModel.runFix(FixLevel.SAFE) },
+                enabled = state.shizukuAvailable,
                 colors = ButtonDefaults.buttonColors(containerColor = Copper),
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -147,20 +231,22 @@ fun FixScreen(
 
             OutlinedButton(
                 onClick = { viewModel.runFix(FixLevel.MODERATE) },
+                enabled = state.shizukuAvailable,
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Fix (Moderate)")
+                Text("Fix (Moderate) + TRIM storage")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedButton(
                 onClick = { viewModel.runFix(FixLevel.AGGRESSIVE) },
+                enabled = state.shizukuAvailable,
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Fix (Aggressive)")
+                Text("Fix (Aggressive) + ART re-opt")
             }
 
             if (state.hasSnapshot) {

@@ -1,0 +1,7 @@
+[
+  {"pkg": "br.com.claro.claromusica", "name": "Claro Musica", "severity": "light", "safe": true, "ramMb": 55, "batteryPct": 0.9, "notes": "Claro carrier music app."},
+  {"pkg": "br.com.claro.claroshop", "name": "Claro Shop", "severity": "light", "safe": true, "ramMb": 65, "batteryPct": 0.8, "notes": "Claro shopping app."},
+  {"pkg": "br.com.vivo.appvivoapp", "name": "Meu Vivo", "severity": "light", "safe": true, "ramMb": 70, "batteryPct": 1.2, "notes": "Vivo carrier app."},
+  {"pkg": "br.com.tim.minhatim", "name": "Meu TIM", "severity": "light", "safe": true, "ramMb": 60, "batteryPct": 1.0, "notes": "TIM carrier self-care."},
+  {"pkg": "com.mercadolibre", "name": "Mercado Livre (preloaded)", "severity": "light", "safe": true, "ramMb": 100, "batteryPct": 1.4, "notes": "Reinstall from Play Store if needed."}
+]

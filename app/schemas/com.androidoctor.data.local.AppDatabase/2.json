@@ -1,0 +1,168 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "ec6ff694064c4670af6253014435b768",
+    "entities": [
+      {
+        "tableName": "benchmarks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `label` TEXT NOT NULL, `ramAvailableMb` INTEGER NOT NULL, `ramUsedPct` REAL NOT NULL, `swapUsedMb` INTEGER NOT NULL, `cpuLoad1` REAL NOT NULL, `seqReadMbps` REAL NOT NULL, `seqWriteMbps` REAL NOT NULL, `randReadIops` REAL NOT NULL, `randWriteIops` REAL NOT NULL, `processCount` INTEGER NOT NULL, `appLaunchesJson` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ramAvailableMb",
+            "columnName": "ramAvailableMb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ramUsedPct",
+            "columnName": "ramUsedPct",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "swapUsedMb",
+            "columnName": "swapUsedMb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpuLoad1",
+            "columnName": "cpuLoad1",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seqReadMbps",
+            "columnName": "seqReadMbps",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seqWriteMbps",
+            "columnName": "seqWriteMbps",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "randReadIops",
+            "columnName": "randReadIops",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "randWriteIops",
+            "columnName": "randWriteIops",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "processCount",
+            "columnName": "processCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appLaunchesJson",
+            "columnName": "appLaunchesJson",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "score_snapshots",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `overall` INTEGER NOT NULL, `battery` INTEGER NOT NULL, `storage` INTEGER NOT NULL, `memory` INTEGER NOT NULL, `cpu` INTEGER NOT NULL, `bloatware` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "overall",
+            "columnName": "overall",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "battery",
+            "columnName": "battery",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storage",
+            "columnName": "storage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "memory",
+            "columnName": "memory",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cpu",
+            "columnName": "cpu",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bloatware",
+            "columnName": "bloatware",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec6ff694064c4670af6253014435b768')"
+    ]
+  }
+}

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Android Doctor</string>
+    <string name="tile_tap_to_diagnose">Tap to diagnose</string>
+    <string name="weekly_notif_channel_name">Weekly health</string>
+    <string name="weekly_notif_channel_desc">Weekly reminders about your phone\'s health</string>
+    <string name="weekly_notif_title_issues">%1$d issues found this week</string>
+    <string name="weekly_notif_title_trend">Score dropped %1$d points</string>
+    <string name="weekly_notif_title_action">Free up space</string>
+    <string name="weekly_notif_title_praise">Phone health stable · %1$d/100</string>
+    <string name="weekly_notif_body">Tap to see what changed.</string>
 </resources>

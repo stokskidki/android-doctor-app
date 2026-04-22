@@ -1,0 +1,56 @@
+[
+  {
+    "pkg": "com.facebook.appmanager",
+    "name": "Facebook App Manager",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 45,
+    "batteryPct": 1.8,
+    "notes": "Manages Facebook app installs. Facebook works fine without it."
+  },
+  {
+    "pkg": "com.facebook.services",
+    "name": "Facebook Services",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 60,
+    "batteryPct": 2.5,
+    "notes": "Background services for Facebook products. Not needed for using apps."
+  },
+  {
+    "pkg": "com.facebook.system",
+    "name": "Facebook System",
+    "severity": "moderate",
+    "safe": true,
+    "ramMb": 40,
+    "batteryPct": 1.5,
+    "notes": "System-level Facebook integration. Safe to disable."
+  },
+  {
+    "pkg": "com.microsoft.skydrive",
+    "name": "OneDrive",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 80,
+    "batteryPct": 1.2,
+    "notes": "Microsoft cloud storage. Disable if unused."
+  },
+  {
+    "pkg": "com.linkedin.android",
+    "name": "LinkedIn",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 70,
+    "batteryPct": 1.0,
+    "notes": "Preloaded on many devices."
+  },
+  {
+    "pkg": "com.netflix.mediaclient",
+    "name": "Netflix (preloaded)",
+    "severity": "light",
+    "safe": true,
+    "ramMb": 60,
+    "batteryPct": 0.8,
+    "notes": "Reinstall from Play Store if needed."
+  }
+]

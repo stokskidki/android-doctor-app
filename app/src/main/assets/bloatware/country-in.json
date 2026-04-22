@@ -1,0 +1,13 @@
+[
+  {"pkg": "com.jio.myjio", "name": "MyJio", "severity": "light", "safe": true, "ramMb": 90, "batteryPct": 2.0, "notes": "Jio carrier app. Preloaded on many Indian devices."},
+  {"pkg": "com.jio.jioplay.tv", "name": "JioTV", "severity": "moderate", "safe": true, "ramMb": 80, "batteryPct": 1.8, "notes": "JioTV streaming. Uses background data."},
+  {"pkg": "com.jio.media.jiobeats", "name": "JioSaavn", "severity": "light", "safe": true, "ramMb": 60, "batteryPct": 1.0, "notes": "Music streaming preload."},
+  {"pkg": "com.jio.jioplay.games", "name": "JioGames", "severity": "light", "safe": true, "ramMb": 50, "batteryPct": 0.8, "notes": "Preloaded games catalog."},
+  {"pkg": "com.jio.myjio.hellotunes", "name": "JioTunes", "severity": "light", "safe": true, "ramMb": 30, "batteryPct": 0.3, "notes": "Caller tune service."},
+  {"pkg": "com.vi.vodafoneintelligentnetwork", "name": "Vi App", "severity": "light", "safe": true, "ramMb": 70, "batteryPct": 1.5, "notes": "Vi (Vodafone-Idea) carrier app."},
+  {"pkg": "com.airtel.africa.selfcare", "name": "Airtel", "severity": "light", "safe": true, "ramMb": 65, "batteryPct": 1.3, "notes": "Airtel self-care carrier app."},
+  {"pkg": "in.amazon.mShop.android.shopping", "name": "Amazon India (preloaded)", "severity": "light", "safe": true, "ramMb": 100, "batteryPct": 1.5, "notes": "Can reinstall from Play Store."},
+  {"pkg": "com.flipkart.android", "name": "Flipkart (preloaded)", "severity": "light", "safe": true, "ramMb": 90, "batteryPct": 1.4, "notes": "Preloaded on some OEMs."},
+  {"pkg": "com.phonepe.app", "name": "PhonePe (preloaded)", "severity": "light", "safe": true, "ramMb": 110, "batteryPct": 1.2, "notes": "UPI app. Safe to disable if you use another UPI app."},
+  {"pkg": "net.one97.paytm", "name": "Paytm (preloaded)", "severity": "light", "safe": true, "ramMb": 100, "batteryPct": 1.3, "notes": "Safe to disable if you use another payment app."}
+]

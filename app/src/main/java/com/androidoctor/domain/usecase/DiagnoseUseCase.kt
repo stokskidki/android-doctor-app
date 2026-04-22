@@ -1,11 +1,15 @@
 package com.androidoctor.domain.usecase
 
+import com.androidoctor.data.local.dao.ScoreSnapshotDao
+import com.androidoctor.data.local.entity.ScoreSnapshotEntity
 import com.androidoctor.domain.model.DiagnosisResult
 import com.androidoctor.domain.repository.DiagnosisRepository
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DiagnoseUseCase @Inject constructor(
     private val repository: DiagnosisRepository,
+    private val snapshotDao: ScoreSnapshotDao,
 ) {
     suspend operator fun invoke(): DiagnosisResult {
         val device = repository.getDeviceInfo()
@@ -16,6 +20,8 @@ class DiagnoseUseCase @Inject constructor(
         val bloatware = repository.diagnoseBloatware()
         val verdict = repository.computeVerdict(battery, storage, memory, cpu, bloatware)
 
+        persistSnapshot(verdict.overallScore, battery.score, storage.score, memory.score, cpu.score, bloatware.score)
+
         return DiagnosisResult(
             device = device,
             battery = battery,
@@ -25,5 +31,23 @@ class DiagnoseUseCase @Inject constructor(
             bloatware = bloatware,
             verdict = verdict,
         )
+    }
+
+    private suspend fun persistSnapshot(
+        overall: Int, battery: Int, storage: Int, memory: Int, cpu: Int, bloatware: Int,
+    ) {
+        runCatching {
+            snapshotDao.insert(
+                ScoreSnapshotEntity(
+                    timestamp = System.currentTimeMillis(),
+                    overall = overall, battery = battery, storage = storage,
+                    memory = memory, cpu = cpu, bloatware = bloatware,
+                )
+            )
+            val cutoff = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(90)
+            snapshotDao.pruneBefore(cutoff)
+            val count = snapshotDao.count()
+            if (count > 500) snapshotDao.deleteOldest(count - 500)
+        }
     }
 }

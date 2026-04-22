@@ -26,9 +26,23 @@ interface FixRepository {
     suspend fun setBackgroundProcessLimit(limit: Int): Boolean
     suspend fun restrictBackground(packageName: String): Boolean
     suspend fun trimCaches(): Long // returns bytes freed
+    suspend fun fstrimData(): Boolean // storage TRIM on /data
+    suspend fun killAllApps(): Int // returns processes killed
+    suspend fun dropKernelCaches(): Boolean // echo 3 > /proc/sys/vm/drop_caches
+    suspend fun reoptimizeTopApps(packages: List<String>): Int // `cmd package compile` speed profile
+    suspend fun setCpuGovernor(governor: String): Int // returns cpu cores set
+    suspend fun getCurrentCpuGovernor(): String?
+    suspend fun panicBoost(): PanicBoostResult
     suspend fun rollbackAll(): Int // returns number of changes reverted
     fun hasRollbackSnapshot(): Boolean
 }
+
+data class PanicBoostResult(
+    val processesKilled: Int,
+    val cacheFreedBytes: Long,
+    val kernelCachesDropped: Boolean,
+    val animationsZeroed: Boolean,
+)
 
 interface BenchmarkRepository {
     suspend fun runBenchmark(label: String): BenchmarkResult

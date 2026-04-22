@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.androidoctor.data.local.AppDatabase
 import com.androidoctor.data.local.dao.BenchmarkDao
+import com.androidoctor.data.local.dao.ScoreSnapshotDao
 import com.androidoctor.data.repository.DiagnosisRepositoryImpl
 import com.androidoctor.data.repository.FixRepositoryImpl
 import com.androidoctor.data.shell.ShellExecutor
@@ -38,9 +39,12 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "android_doctor.db")
-            .fallbackToDestructiveMigration()
+            .addMigrations(AppDatabase.MIGRATION_1_2)
             .build()
 
     @Provides
     fun provideBenchmarkDao(db: AppDatabase): BenchmarkDao = db.benchmarkDao()
+
+    @Provides
+    fun provideScoreSnapshotDao(db: AppDatabase): ScoreSnapshotDao = db.scoreSnapshotDao()
 }
