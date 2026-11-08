@@ -32,7 +32,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-
 - name: Warm Gradle Distribution
   uses: actions/cache@v4
   with:
